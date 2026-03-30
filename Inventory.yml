@@ -5,6 +5,9 @@ all:
     ansible_network_os: eos
     ansible_user: admin
     ansible_password: admin
+    ansible_become: yes
+    ansible_become_method: enable
+    ansible_become_password: admin
 
   children:
     spines:
