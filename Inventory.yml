@@ -19,8 +19,8 @@ all:
     leafs:
       hosts:
         leaf1:
-          id: 1
+          id: 11
           asn: 65020
         leaf2:
-          id: 2
+          id: 12
           asn: 65020
