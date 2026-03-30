@@ -60,7 +60,7 @@
       eos_config:
         lines:
           - router bgp {{ asn }}
-          - router-id {{ loopback }}
+          - router-id "{{ loopback }}"
           - address-family evpn
 
     - name: Configure EVPN neighbors (leaf -> spines only)
