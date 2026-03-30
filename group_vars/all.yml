@@ -30,6 +30,6 @@ links:
     leaf_ip: 10.0.0.6/31
     spine_ip: 10.0.0.7/31
 
-    vlans:
+vlans:
   - { id: 10, vni: 10010 }
   - { id: 20, vni: 10020 }
