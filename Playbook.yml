@@ -15,7 +15,6 @@
       eos_config:
         lines:
           - service routing protocols model multi-agent
-          - ip routing
 
     - name: Configure Loopback
       eos_config:
