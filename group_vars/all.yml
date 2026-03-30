@@ -1,6 +1,35 @@
 ---
 loopback_base: "1.1.1"
 
-vlans:
+links:
+  - leaf: leaf1
+    spine: spine1
+    leaf_intf: Ethernet1
+    spine_intf: Ethernet1
+    leaf_ip: 10.0.0.0/31
+    spine_ip: 10.0.0.1/31
+
+  - leaf: leaf1
+    spine: spine2
+    leaf_intf: Ethernet2
+    spine_intf: Ethernet1
+    leaf_ip: 10.0.0.2/31
+    spine_ip: 10.0.0.3/31
+
+  - leaf: leaf2
+    spine: spine1
+    leaf_intf: Ethernet1
+    spine_intf: Ethernet2
+    leaf_ip: 10.0.0.4/31
+    spine_ip: 10.0.0.5/31
+
+  - leaf: leaf2
+    spine: spine2
+    leaf_intf: Ethernet2
+    spine_intf: Ethernet2
+    leaf_ip: 10.0.0.6/31
+    spine_ip: 10.0.0.7/31
+
+    vlans:
   - { id: 10, vni: 10010 }
   - { id: 20, vni: 10020 }
