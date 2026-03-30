@@ -1,0 +1,190 @@
+---
+- name: Configure leafs (VXLAN EVPN)
+  hosts: leafs
+  gather_facts: no
+
+  vars:
+    loopback: "{{ loopback_base }}.{{ id }}"
+
+  tasks:
+
+    # -------------------
+    # Enable routing
+    # -------------------
+    - name: Enable routing
+      eos_config:
+        lines:
+          - service routing protocols model multi-agent
+
+    # -------------------
+    # Configure Loopback
+    # -------------------
+    - name: Configure Loopback
+      eos_config:
+        lines:
+          - interface Loopback0
+          - ip address {{ loopback }}/32
+
+    # -------------------
+    # Configure Underlay Interfaces
+    # -------------------
+    #host_vars spine id pulled from inventory.yml
+    - name: Configure leaf underlay interfaces
+      eos_config:
+        lines: |
+          {% for spine in groups['spines'] %}
+          interface Ethernet{{ loop.index }}
+            no switchport
+            ip address 10.0.{{ hostvars[spine].id }}{{ id }}.0/31
+          {% endfor %}
+
+    # -------------------
+    # Underlay BGP
+    # -------------------
+    - name: Configure BGP underlay for leafs
+      eos_config:
+        lines: |
+          router bgp {{ asn }}
+            no bgp default ipv4-unicast
+            {% for spine in groups['spines'] %}
+            neighbor 10.0.{{ hostvars[spine].id }}{{ id }}.1 remote-as {{ hostvars[spine].asn }}
+            address-family ipv4
+              neighbor 10.0.{{ hostvars[spine].id }}{{ id }}.1 activate
+            {% endfor %}
+            network {{ loopback }}/32
+
+    # -------------------
+    # EVPN Overlay
+    # -------------------
+    - name: Configure EVPN
+      eos_config:
+        lines:
+          - router bgp {{ asn }}
+          - router-id {{ loopback }}
+          - address-family evpn
+
+    - name: Configure EVPN neighbors
+      eos_config:
+        lines: |
+          router bgp {{ asn }}
+          {% for host in groups['all'] if host != inventory_hostname %}
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} remote-as {{ hostvars[host].asn }}
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} update-source Loopback0
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} ebgp-multihop 3
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} send-community extended
+          address-family evpn
+            neighbor {{ loopback_base }}.{{ hostvars[host].id }} activate
+          {% endfor %}
+
+    # -------------------
+    # VXLAN / VLANs
+    # -------------------
+    - name: Configure VLANs
+      eos_config:
+        lines: |
+          {% for vlan in vlans %}
+          vlan {{ vlan.id }}
+          {% endfor %}
+
+    - name: Configure VXLAN
+      eos_config:
+        lines:
+          - interface Vxlan1
+          - vxlan source-interface Loopback0
+          - vxlan udp-port 4789
+
+    - name: Map VNIs
+      eos_config:
+        lines: |
+          interface Vxlan1
+          {% for vlan in vlans %}
+          vxlan vlan {{ vlan.id }} vni {{ vlan.vni }}
+          {% endfor %}
+
+    - name: Enable EVPN VLANs
+      eos_config:
+        lines: |
+          router bgp {{ asn }}
+          {% for vlan in vlans %}
+          vlan {{ vlan.id }}
+            rd auto
+            route-target both auto
+          {% endfor %}
+
+---
+
+- name: Configure spines (VXLAN EVPN)
+  hosts: spines
+  gather_facts: no
+
+  vars:
+    loopback: "{{ loopback_base }}.{{ id }}"
+
+  tasks:
+
+    # -------------------
+    # Enable routing
+    # -------------------
+    - name: Enable routing
+      eos_config:
+        lines:
+          - service routing protocols model multi-agent
+
+    # -------------------
+    # Configure Loopback
+    # -------------------
+    - name: Configure Loopback
+      eos_config:
+        lines:
+          - interface Loopback0
+          - ip address {{ loopback }}/32
+
+    # -------------------
+    # Configure Underlay Interfaces
+    # -------------------
+    - name: Configure spine underlay interfaces
+      eos_config:
+        lines: |
+          {% for leaf in groups['leafs'] %}
+          interface Ethernet{{ loop.index }}
+            no switchport
+            ip address 10.0.{{ id }}{{ hostvars[leaf].id }}.1/31
+          {% endfor %}
+
+    # -------------------
+    # Underlay BGP
+    # -------------------
+    - name: Configure BGP underlay for spines
+      eos_config:
+        lines: |
+          router bgp {{ asn }}
+            no bgp default ipv4-unicast
+            {% for leaf in groups['leafs'] %}
+            neighbor 10.0.{{ id }}{{ hostvars[leaf].id }}.0 remote-as {{ hostvars[leaf].asn }}
+            address-family ipv4
+              neighbor 10.0.{{ id }}{{ hostvars[leaf].id }}.0 activate
+            {% endfor %}
+            network {{ loopback }}/32
+
+    # -------------------
+    # EVPN Overlay
+    # -------------------
+    - name: Configure EVPN
+      eos_config:
+        lines:
+          - router bgp {{ asn }}
+          - router-id {{ loopback }}
+          - address-family evpn
+
+    - name: Configure EVPN neighbors
+      eos_config:
+        lines: |
+          router bgp {{ asn }}
+          {% for host in groups['all'] if host != inventory_hostname %}
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} remote-as {{ hostvars[host].asn }}
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} update-source Loopback0
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} ebgp-multihop 3
+          neighbor {{ loopback_base }}.{{ hostvars[host].id }} send-community extended
+          address-family evpn
+            neighbor {{ loopback_base }}.{{ hostvars[host].id }} activate
+          {% endfor %}

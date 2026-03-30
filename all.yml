@@ -1,0 +1,6 @@
+---
+loopback_base: "1.1.1"
+
+vlans:
+  - { id: 10, vni: 10010 }
+  - { id: 20, vni: 10020 }
