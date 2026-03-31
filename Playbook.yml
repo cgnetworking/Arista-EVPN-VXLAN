@@ -4,7 +4,7 @@
 # =========================
 - name: Configure leafs (VXLAN EVPN)
   hosts: leafs
-  gather_facts: no
+  gather_facts: false
 
   vars:
     loopback: "{{ loopback_base }}.{{ id }}"
@@ -68,13 +68,6 @@
           - router-id {{ loopback }}
         parents: router bgp {{ asn }}
 
-    - name: Ensure EVPN address-family exists on leafs
-      eos_config:
-        lines: []
-        parents:
-          - router bgp {{ asn }}
-          - address-family evpn
-
     - name: Configure EVPN neighbors (leaf -> spines only)
       eos_config:
         lines: |
@@ -123,13 +116,13 @@
 
     - name: Enable EVPN VLANs
       eos_config:
-        lines: |
-          {% for vlan in vlans %}
-          vlan {{ vlan.id }}
-            rd auto
-            route-target both auto
-          {% endfor %}
-        parents: router bgp {{ asn }}
+        lines:
+          - rd auto
+          - route-target both auto
+        parents:
+          - router bgp {{ asn }}
+          - vlan {{ item.id }}
+      loop: "{{ vlans }}"
 
 
 # =========================
@@ -200,13 +193,6 @@
         lines:
           - router-id {{ loopback }}
         parents: router bgp {{ asn }}
-
-    - name: Ensure EVPN address-family exists on spines
-      eos_config:
-        lines: []
-        parents:
-          - router bgp {{ asn }}
-          - address-family evpn
 
     - name: Configure EVPN neighbors (spines -> leafs only)
       eos_config:
