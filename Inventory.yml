@@ -23,13 +23,13 @@ all:
       hosts:
         clab-aristaceos-leaf01:
           id: 11
-          asn: 65020
+          asn: 65011
         clab-aristaceos-leaf02:
           id: 12
-          asn: 65020
+          asn: 65012
         clab-aristaceos-leaf03:
           id: 13
-          asn: 65020
+          asn: 65013
         clab-aristaceos-leaf04:
           id: 14
-          asn: 65020
+          asn: 65014
