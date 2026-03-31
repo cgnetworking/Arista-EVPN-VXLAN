@@ -20,8 +20,8 @@
     - name: Configure Loopback
       eos_config:
         lines:
-          - interface Loopback0
           - ip address {{ loopback }}/32
+        parents: interface Loopback0
 
     # -------------------
     # Underlay Interfaces (Link Map)
@@ -42,44 +42,59 @@
     - name: Configure BGP underlay for leafs
       eos_config:
         lines: |
-          router bgp {{ asn }}
-            no bgp default ipv4-unicast
+          no bgp default ipv4-unicast
+          {% for link in links if link.leaf == inventory_hostname %}
+          neighbor {{ link.spine_ip.split('/')[0] }} remote-as {{ hostvars[link.spine].asn }}
+          {% endfor %}
+          network {{ loopback }}/32
+        parents: router bgp {{ asn }}
 
-            {% for link in links if link.leaf == inventory_hostname %}
-            neighbor {{ link.spine_ip.split('/')[0] }} remote-as {{ hostvars[link.spine].asn }}
-            address-family ipv4
-              neighbor {{ link.spine_ip.split('/')[0] }} activate
-            {% endfor %}
-
-            network {{ loopback }}/32
+    - name: Activate leaf underlay neighbors for IPv4
+      eos_config:
+        lines: |
+          {% for link in links if link.leaf == inventory_hostname %}
+          neighbor {{ link.spine_ip.split('/')[0] }} activate
+          {% endfor %}
+        parents:
+          - router bgp {{ asn }}
+          - address-family ipv4
 
     # -------------------
     # EVPN Overlay
     # -------------------
     - name: Configure EVPN base
       eos_config:
-        lines: |
-          router bgp {{ asn }}
-            router-id "{{ loopback }}"
-            address-family evpn
+        lines:
+          - router-id {{ loopback }}
+        parents: router bgp {{ asn }}
+
+    - name: Ensure EVPN address-family exists on leafs
+      eos_config:
+        lines: []
+        parents:
+          - router bgp {{ asn }}
+          - address-family evpn
 
     - name: Configure EVPN neighbors (leaf -> spines only)
       eos_config:
         lines: |
-          router bgp {{ asn }}
-
           neighbor EVPN peer group
           neighbor EVPN update-source Loopback0
           neighbor EVPN ebgp-multihop 3
           neighbor EVPN send-community extended
-
           {% for spine in groups['spines'] %}
           neighbor {{ loopback_base }}.{{ hostvars[spine].id }} peer group EVPN
           neighbor {{ loopback_base }}.{{ hostvars[spine].id }} remote-as {{ hostvars[spine].asn }}
           {% endfor %}
+        parents: router bgp {{ asn }}
 
-          address-family evpn
-            neighbor EVPN activate
+    - name: Activate leaf EVPN neighbors
+      eos_config:
+        lines:
+          - neighbor EVPN activate
+        parents:
+          - router bgp {{ asn }}
+          - address-family evpn
 
     # -------------------
     # VLANs / VXLAN
@@ -94,27 +109,27 @@
     - name: Configure VXLAN interface
       eos_config:
         lines:
-          - interface Vxlan1
           - vxlan source-interface Loopback0
           - vxlan udp-port 4789
+        parents: interface Vxlan1
 
     - name: Map VNIs
       eos_config:
         lines: |
-          interface Vxlan1
           {% for vlan in vlans %}
           vxlan vlan {{ vlan.id }} vni {{ vlan.vni }}
           {% endfor %}
+        parents: interface Vxlan1
 
     - name: Enable EVPN VLANs
       eos_config:
         lines: |
-          router bgp {{ asn }}
           {% for vlan in vlans %}
           vlan {{ vlan.id }}
             rd auto
             route-target both auto
           {% endfor %}
+        parents: router bgp {{ asn }}
 
 
 # =========================
@@ -138,8 +153,8 @@
     - name: Configure Loopback
       eos_config:
         lines:
-          - interface Loopback0
           - ip address {{ loopback }}/32
+        parents: interface Loopback0
 
     # -------------------
     # Underlay Interfaces (Link Map)
@@ -160,16 +175,22 @@
     - name: Configure BGP underlay for spines
       eos_config:
         lines: |
-          router bgp {{ asn }}
-            no bgp default ipv4-unicast
+          no bgp default ipv4-unicast
+          {% for link in links if link.spine == inventory_hostname %}
+          neighbor {{ link.leaf_ip.split('/')[0] }} remote-as {{ hostvars[link.leaf].asn }}
+          {% endfor %}
+          network {{ loopback }}/32
+        parents: router bgp {{ asn }}
 
-            {% for link in links if link.spine == inventory_hostname %}
-            neighbor {{ link.leaf_ip.split('/')[0] }} remote-as {{ hostvars[link.leaf].asn }}
-            address-family ipv4
-              neighbor {{ link.leaf_ip.split('/')[0] }} activate
-            {% endfor %}
-
-            network {{ loopback }}/32
+    - name: Activate spine underlay neighbors for IPv4
+      eos_config:
+        lines: |
+          {% for link in links if link.spine == inventory_hostname %}
+          neighbor {{ link.leaf_ip.split('/')[0] }} activate
+          {% endfor %}
+        parents:
+          - router bgp {{ asn }}
+          - address-family ipv4
 
     # -------------------
     # EVPN Overlay
@@ -177,24 +198,33 @@
     - name: Configure EVPN base
       eos_config:
         lines:
-          - router bgp {{ asn }}
           - router-id {{ loopback }}
+        parents: router bgp {{ asn }}
+
+    - name: Ensure EVPN address-family exists on spines
+      eos_config:
+        lines: []
+        parents:
+          - router bgp {{ asn }}
           - address-family evpn
 
     - name: Configure EVPN neighbors (spines -> leafs only)
       eos_config:
         lines: |
-          router bgp {{ asn }}
-
           neighbor EVPN peer group
           neighbor EVPN update-source Loopback0
           neighbor EVPN ebgp-multihop 3
           neighbor EVPN send-community extended
-
           {% for leaf in groups['leafs'] %}
           neighbor {{ loopback_base }}.{{ hostvars[leaf].id }} peer group EVPN
           neighbor {{ loopback_base }}.{{ hostvars[leaf].id }} remote-as {{ hostvars[leaf].asn }}
           {% endfor %}
+        parents: router bgp {{ asn }}
 
-          address-family evpn
-            neighbor EVPN activate
+    - name: Activate spine EVPN neighbors
+      eos_config:
+        lines:
+          - neighbor EVPN activate
+        parents:
+          - router bgp {{ asn }}
+          - address-family evpn
