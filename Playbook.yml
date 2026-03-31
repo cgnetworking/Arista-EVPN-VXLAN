@@ -28,13 +28,13 @@
     # -------------------
     - name: Configure leaf underlay interfaces
       eos_config:
-        lines: |
-          {% for link in links if link.leaf == inventory_hostname %}
-          interface {{ link.leaf_intf }}
-            description {{ link.leaf }}-to-{{ link.spine }}
-            no switchport
-            ip address {{ link.leaf_ip }}
-          {% endfor %}
+        lines:
+          - description {{ item.leaf }}-to-{{ item.spine }}
+          - no switchport
+          - ip address {{ item.leaf_ip }}
+        parents: "interface {{ item.leaf_intf }}"
+      loop: "{{ links }}"
+      when: item.leaf == inventory_hostname
 
     # -------------------
     # Underlay BGP
@@ -161,13 +161,13 @@
     # -------------------
     - name: Configure spine underlay interfaces
       eos_config:
-        lines: |
-          {% for link in links if link.spine == inventory_hostname %}
-          interface {{ link.spine_intf }}
-            description {{ link.spine }}-to-{{ link.leaf }}
-            no switchport
-            ip address {{ link.spine_ip }}
-          {% endfor %}
+        lines:
+          - description {{ item.spine }}-to-{{ item.leaf }}
+          - no switchport
+          - ip address {{ item.spine_ip }}
+        parents: "interface {{ item.spine_intf }}"
+      loop: "{{ links }}"
+      when: item.spine == inventory_hostname
 
     # -------------------
     # Underlay BGP
