@@ -117,11 +117,12 @@
     - name: Enable EVPN VLANs
       eos_config:
         lines:
+          - vlan {{ item.id }}
           - rd auto
-          - route-target both auto
+          - route-target import auto
+          - route-target export auto
         parents:
           - router bgp {{ asn }}
-          - vlan {{ item.id }}
       loop: "{{ vlans }}"
 
 
