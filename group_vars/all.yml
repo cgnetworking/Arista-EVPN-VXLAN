@@ -2,33 +2,61 @@
 loopback_base: "192.168.1"
 
 links:
-  - leaf: leaf1
-    spine: spine1
+  - leaf: clab-aristaceos-leaf01
+    spine: clab-aristaceos-spine01
     leaf_intf: Ethernet1
     spine_intf: Ethernet1
     leaf_ip: 10.0.0.0/31
     spine_ip: 10.0.0.1/31
 
-  - leaf: leaf1
-    spine: spine2
+  - leaf: clab-aristaceos-leaf01
+    spine: clab-aristaceos-spine02
     leaf_intf: Ethernet2
     spine_intf: Ethernet1
     leaf_ip: 10.0.0.2/31
     spine_ip: 10.0.0.3/31
 
-  - leaf: leaf2
-    spine: spine1
+  - leaf: clab-aristaceos-leaf02
+    spine: clab-aristaceos-spine01
     leaf_intf: Ethernet1
     spine_intf: Ethernet2
     leaf_ip: 10.0.0.4/31
     spine_ip: 10.0.0.5/31
 
-  - leaf: leaf2
-    spine: spine2
+  - leaf: clab-aristaceos-leaf02
+    spine: clab-aristaceos-spine02
     leaf_intf: Ethernet2
     spine_intf: Ethernet2
     leaf_ip: 10.0.0.6/31
     spine_ip: 10.0.0.7/31
+
+  - leaf: clab-aristaceos-leaf03
+    spine: clab-aristaceos-spine01
+    leaf_intf: Ethernet1
+    spine_intf: Ethernet3
+    leaf_ip: 10.0.0.8/31
+    spine_ip: 10.0.0.9/31
+
+  - leaf: clab-aristaceos-leaf03
+    spine: clab-aristaceos-spine02
+    leaf_intf: Ethernet2
+    spine_intf: Ethernet3
+    leaf_ip: 10.0.0.10/31
+    spine_ip: 10.0.0.11/31
+
+  - leaf: clab-aristaceos-leaf04
+    spine: clab-aristaceos-spine01
+    leaf_intf: Ethernet1
+    spine_intf: Ethernet4
+    leaf_ip: 10.0.0.12/31
+    spine_ip: 10.0.0.13/31
+
+  - leaf: clab-aristaceos-leaf04
+    spine: clab-aristaceos-spine02
+    leaf_intf: Ethernet2
+    spine_intf: Ethernet4
+    leaf_ip: 10.0.0.14/31
+    spine_ip: 10.0.0.15/31
 
 vlans:
   - { id: 10, vni: 10010 }
