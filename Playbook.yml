@@ -16,6 +16,7 @@
         lines:
           - service routing protocols model multi-agent
           - ip routing
+          - aaa authorization exec default local
 
     - name: Configure Loopback
       eos_config:
@@ -57,7 +58,7 @@
           {% endfor %}
         parents:
           - router bgp {{ asn }}
-          - address-family ipv4
+          - 
 
     # -------------------
     # EVPN Overlay
@@ -72,12 +73,13 @@
       eos_config:
         lines: |
           neighbor EVPN peer group
+          maximum-paths 4 ecmp 4
+          neighbor EVPN remote-as {{ hostvars[spine].asn }}
           neighbor EVPN update-source Loopback0
           neighbor EVPN ebgp-multihop 3
           neighbor EVPN send-community extended
           {% for spine in groups['spines'] %}
           neighbor {{ loopback_base }}.{{ hostvars[spine].id }} peer group EVPN
-          neighbor {{ loopback_base }}.{{ hostvars[spine].id }} remote-as {{ hostvars[spine].asn }}
           {% endfor %}
         parents: router bgp {{ asn }}
 
@@ -143,6 +145,7 @@
         lines:
           - service routing protocols model multi-agent
           - ip routing
+          - aaa authorization exec default local
 
     - name: Configure Loopback
       eos_config:
@@ -184,7 +187,7 @@
           {% endfor %}
         parents:
           - router bgp {{ asn }}
-          - address-family ipv4
+          - 
 
     # -------------------
     # EVPN Overlay
