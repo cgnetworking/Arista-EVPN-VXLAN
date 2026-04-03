@@ -150,8 +150,8 @@
       eos_config:
         lines:
           - rd auto
-          - route-target import auto {{ asn }}
-          - route-target export auto {{ asn }}
+          - route-target import auto {{ evpn_route_target_asn }}
+          - route-target export auto {{ evpn_route_target_asn }}
           - redistribute learned
         parents:
           - router bgp {{ asn }}
