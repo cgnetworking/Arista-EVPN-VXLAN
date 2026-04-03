@@ -93,7 +93,7 @@
       eos_config:
         lines:
           - neighbor EVPN peer group
-          - maximum-paths 4 ecmp 4
+          - maximum-paths 2 ecmp 2
           - neighbor EVPN remote-as {{ spine_asn }}
           - neighbor EVPN update-source Loopback0
           - neighbor EVPN ebgp-multihop 3
