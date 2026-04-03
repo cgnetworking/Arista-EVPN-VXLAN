@@ -88,6 +88,7 @@
       eos_config:
         lines:
           - neighbor EVPN activate
+          - advertise-all-vni
         parents:
           - router bgp {{ asn }}
           - address-family evpn
@@ -123,6 +124,7 @@
           - rd auto
           - route-target import auto {{ asn }}
           - route-target export auto {{ asn }}
+          - redistribute learned
         parents:
           - router bgp {{ asn }}
           - vlan {{ item.id }}
