@@ -18,6 +18,7 @@
           - service routing protocols model multi-agent
           - ip routing
           - aaa authorization exec default local
+          - ip virtual-router mac-address 02:00:00:00:10:01
 
     - name: Configure Loopback
       eos_config:
@@ -89,6 +90,7 @@
         lines:
           - neighbor EVPN activate
           - advertise-all-vni
+          - advertise-svi-ip
         parents:
           - router bgp {{ asn }}
           - address-family evpn
@@ -102,6 +104,13 @@
           {% for vlan in vlans %}
           vlan {{ vlan.id }}
           {% endfor %}
+
+    - name: Configure VLAN gateways
+      eos_config:
+        lines:
+          - ip address virtual {{ item.gateway }}
+        parents: interface Vlan{{ item.id }}
+      loop: "{{ vlans }}"
 
     - name: Configure VXLAN interface
       eos_config:
