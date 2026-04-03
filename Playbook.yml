@@ -81,6 +81,7 @@
       eos_config:
         lines:
           - router-id {{ loopback }}
+          - rd auto
         parents: router bgp {{ asn }}
 
     - name: Configure EVPN neighbors (leaf -> spines only)
@@ -157,16 +158,24 @@
           - vlan {{ item.id }}
       loop: "{{ vlans }}"
 
-    - name: Enable EVPN VRFs
+    - name: Configure EVPN VRF base
       eos_config:
         lines:
-          - rd auto
-          - route-target import evpn {{ item.l3_vni }}:{{ item.l3_vni }}
-          - route-target export evpn {{ item.l3_vni }}:{{ item.l3_vni }}
           - redistribute connected
         parents:
           - router bgp {{ asn }}
           - vrf {{ item.vrf }}
+      loop: "{{ vlans }}"
+
+    - name: Configure EVPN VRF IPv4 route-targets
+      eos_config:
+        lines:
+          - route-target import evpn {{ asn }}:{{ item.l3_vni }}
+          - route-target export evpn {{ asn }}:{{ item.l3_vni }}
+        parents:
+          - router bgp {{ asn }}
+          - vrf {{ item.vrf }}
+          - address-family ipv4
       loop: "{{ vlans }}"
 
 
