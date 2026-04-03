@@ -58,7 +58,7 @@
           {% endfor %}
         parents:
           - router bgp {{ asn }}
-          - 
+          - address-family ipv4
 
     # -------------------
     # EVPN Overlay
@@ -74,7 +74,7 @@
         lines: |
           neighbor EVPN peer group
           maximum-paths 4 ecmp 4
-          neighbor EVPN remote-as {{ hostvars[spine].asn }}
+          neighbor EVPN remote-as {{ spine_asn }}
           neighbor EVPN update-source Loopback0
           neighbor EVPN ebgp-multihop 3
           neighbor EVPN send-community extended
@@ -119,12 +119,12 @@
     - name: Enable EVPN VLANs
       eos_config:
         lines:
-          - vlan {{ item.id }}
           - rd auto
           - route-target import auto {{ asn }}
           - route-target export auto {{ asn }}
         parents:
           - router bgp {{ asn }}
+          - vlan {{ item.id }}
       loop: "{{ vlans }}"
 
 
@@ -187,7 +187,7 @@
           {% endfor %}
         parents:
           - router bgp {{ asn }}
-          - 
+          - address-family ipv4
 
     # -------------------
     # EVPN Overlay
