@@ -8,6 +8,7 @@
 
   vars:
     loopback: "{{ loopback_base }}.{{ id }}"
+    spine_asn: "{{ hostvars[groups['spines'][0]].asn }}"
 
   tasks:
 

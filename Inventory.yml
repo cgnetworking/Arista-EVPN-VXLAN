@@ -11,13 +11,13 @@ all:
 
   children:
     spines:
+      vars:
+        asn: 65010
       hosts:
         clab-aristaceos-spine01:
           id: 1
-          asn: 65010
         clab-aristaceos-spine02:
           id: 2
-          asn: 65010
 
     leafs:
       hosts:
