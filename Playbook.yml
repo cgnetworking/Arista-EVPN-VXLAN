@@ -45,7 +45,7 @@
         lines: |
           no bgp default ipv4-unicast
           {% for link in links if link.leaf == inventory_hostname %}
-          neighbor {{ link.spine_ip.split('/')[0] }} remote-as {{ hostvars[link.spine].asn }}
+          neighbor {{ link.spine_ip.split('/')[0] }} remote-as {{ spine_asn }}
           {% endfor %}
           network {{ loopback }}/32
         parents: router bgp {{ asn }}
