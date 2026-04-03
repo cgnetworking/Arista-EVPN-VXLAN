@@ -26,6 +26,18 @@
           - ip address {{ loopback }}/32
         parents: interface Loopback0
 
+    - name: Configure VRFs
+      eos_config:
+        lines:
+          - vrf instance {{ item.vrf }}
+      loop: "{{ vlans }}"
+
+    - name: Enable VRF routing
+      eos_config:
+        lines:
+          - ip routing vrf {{ item.vrf }}
+      loop: "{{ vlans }}"
+
     # -------------------
     # Underlay Interfaces (Link Map)
     # -------------------
@@ -108,6 +120,7 @@
     - name: Configure VLAN gateways
       eos_config:
         lines:
+          - vrf {{ item.vrf }}
           - ip address virtual {{ item.gateway }}
         parents: interface Vlan{{ item.id }}
       loop: "{{ vlans }}"
@@ -127,6 +140,13 @@
           {% endfor %}
         parents: interface Vxlan1
 
+    - name: Map L3 VNIs
+      eos_config:
+        lines:
+          - vxlan vrf {{ item.vrf }} vni {{ item.l3_vni }}
+        parents: interface Vxlan1
+      loop: "{{ vlans }}"
+
     - name: Enable EVPN VLANs
       eos_config:
         lines:
@@ -137,6 +157,18 @@
         parents:
           - router bgp {{ asn }}
           - vlan {{ item.id }}
+      loop: "{{ vlans }}"
+
+    - name: Enable EVPN VRFs
+      eos_config:
+        lines:
+          - rd auto
+          - route-target import evpn {{ item.l3_vni }}:{{ item.l3_vni }}
+          - route-target export evpn {{ item.l3_vni }}:{{ item.l3_vni }}
+          - redistribute connected
+        parents:
+          - router bgp {{ asn }}
+          - vrf {{ item.vrf }}
       loop: "{{ vlans }}"
 
 
