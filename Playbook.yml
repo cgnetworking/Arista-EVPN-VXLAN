@@ -98,14 +98,12 @@
         parents: router bgp {{ asn }}
 
     - name: Activate leaf EVPN neighbors
-      eos_config:
-        lines:
-          - neighbor EVPN activate
-          - advertise-all-vni
-          - advertise-svi-ip
-        parents:
-          - router bgp {{ asn }}
-          - address-family evpn
+     eos_config:
+       lines:
+         - neighbor EVPN activate
+       parents:
+         - router bgp {{ asn }}
+         - address-family evpn
 
     # -------------------
     # VLANs / VXLAN
