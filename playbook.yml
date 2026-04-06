@@ -61,10 +61,17 @@
           - network {{ loopback }}/32
         parents: router bgp {{ asn }}
 
+    - name: Configure UNDERLAY peer group on leafs
+      eos_config:
+        lines:
+          - neighbor UNDERLAY peer group
+          - neighbor UNDERLAY remote-as {{ spine_asn }}
+        parents: router bgp {{ asn }}
+
     - name: Configure leaf underlay BGP neighbors
       eos_config:
         lines:
-          - neighbor {{ item.spine_ip.split('/')[0] }} remote-as {{ spine_asn }}
+          - neighbor {{ item.spine_ip.split('/')[0] }} peer group UNDERLAY
         parents: router bgp {{ asn }}
       loop: "{{ links }}"
       when: item.leaf == inventory_hostname
@@ -72,12 +79,10 @@
     - name: Activate leaf underlay neighbors for IPv4
       eos_config:
         lines:
-          - neighbor {{ item.spine_ip.split('/')[0] }} activate
+          - neighbor UNDERLAY activate
         parents:
           - router bgp {{ asn }}
           - address-family ipv4
-      loop: "{{ links }}"
-      when: item.leaf == inventory_hostname
 
     # -------------------
     # EVPN Overlay
