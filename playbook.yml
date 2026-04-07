@@ -189,8 +189,7 @@
     - name: Configure EVPN VRF IPv4 route-targets
       eos_config:
         lines:
-          - route-target import evpn {{ asn }}:{{ item.l3_vni }}
-          - route-target export evpn {{ asn }}:{{ item.l3_vni }}
+          - route-target both evpn {{ item.tenant_id }}:{{ item.l3_vni }}
         parents:
           - router bgp {{ asn }}
           - vrf {{ item.vrf }}
