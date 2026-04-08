@@ -179,7 +179,7 @@
           - rd auto
           - route-target import evpn {{ item.id }}:{{ item.vni }}
           - route-target export evpn {{ item.id }}:{{ item.vni }}
-          - redistribute learned
+          - redistribute connected
         parents:
           - router bgp {{ asn }}
           - vlan {{ item.id }}
