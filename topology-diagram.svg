@@ -17,19 +17,23 @@
       .tenant2Stroke { stroke: #db2777; }
       .title { font: 700 40px Arial, sans-serif; fill: #0f172a; }
       .subtitle { font: 500 22px Arial, sans-serif; fill: #475569; }
-      .section { font: 700 26px Arial, sans-serif; fill: #0f172a; }
+      .section { font: 700 24px Arial, sans-serif; fill: #0f172a; }
       .nodeName { font: 700 28px Arial, sans-serif; fill: #0f172a; }
       .nodeMeta { font: 500 19px Arial, sans-serif; fill: #334155; }
       .small { font: 500 18px Arial, sans-serif; fill: #334155; }
       .bold { font: 700 20px Arial, sans-serif; fill: #0f172a; }
-      .link { stroke: #64748b; stroke-width: 4; }
+      .link { stroke: #64748b; stroke-width: 2.5; }
       .overlay { stroke: #6d28d9; stroke-width: 6; stroke-dasharray: 18 10; stroke-linecap: round; fill: none; }
       .endpointText { font: 600 14px Arial, sans-serif; fill: #1f2937; }
+      .endpointIp { font-weight: 700; font-size: 12px; }
+      .endpointIpSpine { font-size: 11px; }
+      .labelBg { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; rx: 5; }
+      .ipBg { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; rx: 5; }
       .port { fill: #475569; stroke: #ffffff; stroke-width: 2; }
       .legendLine { stroke-width: 4; }
-      .tableHead { font: 700 19px Arial, sans-serif; fill: #7c2d12; }
-      .tableCell { font: 500 18px Arial, sans-serif; fill: #431407; }
-      .tenantTag { font: 700 16px Arial, sans-serif; }
+      .tableHead { font: 700 18px Arial, sans-serif; fill: #7c2d12; }
+      .tableCell { font: 500 17px Arial, sans-serif; fill: #431407; }
+      .tenantTag { font: 700 15px Arial, sans-serif; }
       .tenant1Text { fill: #1d4ed8; }
       .tenant2Text { fill: #be185d; }
     </style>
@@ -118,112 +122,144 @@
   <circle cx="1930" cy="790" r="7" class="port" />
   <circle cx="2090" cy="790" r="7" class="port" />
 
-  <text x="400" y="515" text-anchor="middle" class="endpointText">
+  <rect x="382" y="499" width="36" height="16" class="labelBg" />
+  <rect x="351" y="519" width="98" height="18" class="ipBg" />
+  <text x="400" y="511" text-anchor="middle" class="endpointText">
     <tspan x="400" dy="0">Eth1</tspan>
-    <tspan x="400" dy="16">10.0.0.1/31</tspan>
+    <tspan x="400" dy="20" class="endpointIp endpointIpSpine">10.0.0.1/31</tspan>
   </text>
-  <text x="480" y="515" text-anchor="middle" class="endpointText">
+  <rect x="462" y="499" width="36" height="16" class="labelBg" />
+  <rect x="431" y="519" width="98" height="18" class="ipBg" />
+  <text x="480" y="511" text-anchor="middle" class="endpointText">
     <tspan x="480" dy="0">Eth2</tspan>
-    <tspan x="480" dy="16">10.0.0.5/31</tspan>
+    <tspan x="480" dy="20" class="endpointIp endpointIpSpine">10.0.0.5/31</tspan>
   </text>
-  <text x="560" y="515" text-anchor="middle" class="endpointText">
+  <rect x="542" y="499" width="36" height="16" class="labelBg" />
+  <rect x="511" y="519" width="98" height="18" class="ipBg" />
+  <text x="560" y="511" text-anchor="middle" class="endpointText">
     <tspan x="560" dy="0">Eth3</tspan>
-    <tspan x="560" dy="16">10.0.0.9/31</tspan>
+    <tspan x="560" dy="20" class="endpointIp endpointIpSpine">10.0.0.9/31</tspan>
   </text>
-  <text x="640" y="515" text-anchor="middle" class="endpointText">
+  <rect x="622" y="499" width="36" height="16" class="labelBg" />
+  <rect x="591" y="519" width="98" height="18" class="ipBg" />
+  <text x="640" y="511" text-anchor="middle" class="endpointText">
     <tspan x="640" dy="0">Eth4</tspan>
-    <tspan x="640" dy="16">10.0.0.13/31</tspan>
+    <tspan x="640" dy="20" class="endpointIp endpointIpSpine">10.0.0.13/31</tspan>
   </text>
 
-  <text x="1740" y="515" text-anchor="middle" class="endpointText">
+  <rect x="1722" y="499" width="36" height="16" class="labelBg" />
+  <rect x="1691" y="519" width="98" height="18" class="ipBg" />
+  <text x="1740" y="511" text-anchor="middle" class="endpointText">
     <tspan x="1740" dy="0">Eth1</tspan>
-    <tspan x="1740" dy="16">10.0.0.3/31</tspan>
+    <tspan x="1740" dy="20" class="endpointIp endpointIpSpine">10.0.0.3/31</tspan>
   </text>
-  <text x="1820" y="515" text-anchor="middle" class="endpointText">
+  <rect x="1802" y="499" width="36" height="16" class="labelBg" />
+  <rect x="1771" y="519" width="98" height="18" class="ipBg" />
+  <text x="1820" y="511" text-anchor="middle" class="endpointText">
     <tspan x="1820" dy="0">Eth2</tspan>
-    <tspan x="1820" dy="16">10.0.0.7/31</tspan>
+    <tspan x="1820" dy="20" class="endpointIp endpointIpSpine">10.0.0.7/31</tspan>
   </text>
-  <text x="1900" y="515" text-anchor="middle" class="endpointText">
+  <rect x="1882" y="499" width="36" height="16" class="labelBg" />
+  <rect x="1851" y="519" width="98" height="18" class="ipBg" />
+  <text x="1900" y="511" text-anchor="middle" class="endpointText">
     <tspan x="1900" dy="0">Eth3</tspan>
-    <tspan x="1900" dy="16">10.0.0.11/31</tspan>
+    <tspan x="1900" dy="20" class="endpointIp endpointIpSpine">10.0.0.11/31</tspan>
   </text>
-  <text x="1980" y="515" text-anchor="middle" class="endpointText">
+  <rect x="1962" y="499" width="36" height="16" class="labelBg" />
+  <rect x="1931" y="519" width="98" height="18" class="ipBg" />
+  <text x="1980" y="511" text-anchor="middle" class="endpointText">
     <tspan x="1980" dy="0">Eth4</tspan>
-    <tspan x="1980" dy="16">10.0.0.15/31</tspan>
+    <tspan x="1980" dy="20" class="endpointIp endpointIpSpine">10.0.0.15/31</tspan>
   </text>
 
-  <text x="250" y="758" text-anchor="middle" class="endpointText">
+  <rect x="232" y="742" width="36" height="16" class="labelBg" />
+  <rect x="201" y="762" width="98" height="18" class="ipBg" />
+  <text x="250" y="754" text-anchor="middle" class="endpointText">
     <tspan x="250" dy="0">Eth1</tspan>
-    <tspan x="250" dy="16">10.0.0.0/31</tspan>
+    <tspan x="250" dy="20" class="endpointIp">10.0.0.0/31</tspan>
   </text>
-  <text x="410" y="758" text-anchor="middle" class="endpointText">
+  <rect x="392" y="742" width="36" height="16" class="labelBg" />
+  <rect x="361" y="762" width="98" height="18" class="ipBg" />
+  <text x="410" y="754" text-anchor="middle" class="endpointText">
     <tspan x="410" dy="0">Eth2</tspan>
-    <tspan x="410" dy="16">10.0.0.2/31</tspan>
+    <tspan x="410" dy="20" class="endpointIp">10.0.0.2/31</tspan>
   </text>
 
-  <text x="810" y="758" text-anchor="middle" class="endpointText">
+  <rect x="792" y="742" width="36" height="16" class="labelBg" />
+  <rect x="761" y="762" width="98" height="18" class="ipBg" />
+  <text x="810" y="754" text-anchor="middle" class="endpointText">
     <tspan x="810" dy="0">Eth1</tspan>
-    <tspan x="810" dy="16">10.0.0.4/31</tspan>
+    <tspan x="810" dy="20" class="endpointIp">10.0.0.4/31</tspan>
   </text>
-  <text x="970" y="758" text-anchor="middle" class="endpointText">
+  <rect x="952" y="742" width="36" height="16" class="labelBg" />
+  <rect x="921" y="762" width="98" height="18" class="ipBg" />
+  <text x="970" y="754" text-anchor="middle" class="endpointText">
     <tspan x="970" dy="0">Eth2</tspan>
-    <tspan x="970" dy="16">10.0.0.6/31</tspan>
+    <tspan x="970" dy="20" class="endpointIp">10.0.0.6/31</tspan>
   </text>
 
-  <text x="1370" y="758" text-anchor="middle" class="endpointText">
+  <rect x="1352" y="742" width="36" height="16" class="labelBg" />
+  <rect x="1321" y="762" width="98" height="18" class="ipBg" />
+  <text x="1370" y="754" text-anchor="middle" class="endpointText">
     <tspan x="1370" dy="0">Eth1</tspan>
-    <tspan x="1370" dy="16">10.0.0.8/31</tspan>
+    <tspan x="1370" dy="20" class="endpointIp">10.0.0.8/31</tspan>
   </text>
-  <text x="1530" y="758" text-anchor="middle" class="endpointText">
+  <rect x="1512" y="742" width="36" height="16" class="labelBg" />
+  <rect x="1481" y="762" width="98" height="18" class="ipBg" />
+  <text x="1530" y="754" text-anchor="middle" class="endpointText">
     <tspan x="1530" dy="0">Eth2</tspan>
-    <tspan x="1530" dy="16">10.0.0.10/31</tspan>
+    <tspan x="1530" dy="20" class="endpointIp">10.0.0.10/31</tspan>
   </text>
 
-  <text x="1930" y="758" text-anchor="middle" class="endpointText">
+  <rect x="1912" y="742" width="36" height="16" class="labelBg" />
+  <rect x="1881" y="762" width="98" height="18" class="ipBg" />
+  <text x="1930" y="754" text-anchor="middle" class="endpointText">
     <tspan x="1930" dy="0">Eth1</tspan>
-    <tspan x="1930" dy="16">10.0.0.12/31</tspan>
+    <tspan x="1930" dy="20" class="endpointIp">10.0.0.12/31</tspan>
   </text>
-  <text x="2090" y="758" text-anchor="middle" class="endpointText">
+  <rect x="2072" y="742" width="36" height="16" class="labelBg" />
+  <rect x="2041" y="762" width="98" height="18" class="ipBg" />
+  <text x="2090" y="754" text-anchor="middle" class="endpointText">
     <tspan x="2090" dy="0">Eth2</tspan>
-    <tspan x="2090" dy="16">10.0.0.14/31</tspan>
+    <tspan x="2090" dy="20" class="endpointIp">10.0.0.14/31</tspan>
   </text>
 
-  <text x="110" y="1200" class="section">Tenant Services Configured By The Playbook</text>
-  <rect x="1760" y="1178" width="160" height="34" rx="17" class="tenant1Fill tenant1Stroke" stroke-width="2" />
-  <text x="1840" y="1200" text-anchor="middle" class="tenantTag tenant1Text">TENANT-1</text>
-  <rect x="1945" y="1178" width="160" height="34" rx="17" class="tenant2Fill tenant2Stroke" stroke-width="2" />
-  <text x="2025" y="1200" text-anchor="middle" class="tenantTag tenant2Text">TENANT-2</text>
+  <text x="110" y="1192" class="section">Tenant Services Configured By The Playbook</text>
+  <rect x="1760" y="1170" width="160" height="30" rx="15" class="tenant1Fill tenant1Stroke" stroke-width="2" />
+  <text x="1840" y="1189" text-anchor="middle" class="tenantTag tenant1Text">TENANT-1</text>
+  <rect x="1945" y="1170" width="160" height="30" rx="15" class="tenant2Fill tenant2Stroke" stroke-width="2" />
+  <text x="2025" y="1189" text-anchor="middle" class="tenantTag tenant2Text">TENANT-2</text>
 
-  <text x="110" y="1250" class="tableHead">VLAN</text>
-  <text x="250" y="1250" class="tableHead">VRF</text>
-  <text x="520" y="1250" class="tableHead">VNI</text>
-  <text x="690" y="1250" class="tableHead">L3 VNI</text>
-  <text x="900" y="1250" class="tableHead">Gateway</text>
-  <text x="1310" y="1250" class="tableHead">EVPN</text>
+  <text x="110" y="1236" class="tableHead">VLAN</text>
+  <text x="250" y="1236" class="tableHead">VRF</text>
+  <text x="520" y="1236" class="tableHead">VNI</text>
+  <text x="690" y="1236" class="tableHead">L3 VNI</text>
+  <text x="900" y="1236" class="tableHead">Gateway</text>
+  <text x="1310" y="1236" class="tableHead">EVPN</text>
 
-  <rect x="95" y="1270" width="2205" height="40" rx="10" class="tenant1Fill" opacity="0.65" />
-  <text x="110" y="1296" class="tableCell">10</text>
-  <text x="250" y="1296" class="tableCell tenant1Text">TENANT-1</text>
-  <text x="520" y="1296" class="tableCell">10010</text>
-  <text x="690" y="1296" class="tableCell">90001</text>
-  <text x="900" y="1296" class="tableCell">10.10.10.1/24</text>
-  <text x="1310" y="1296" class="tableCell">RD auto, RT both 10:10010</text>
+  <rect x="95" y="1254" width="2205" height="38" rx="10" class="tenant1Fill" opacity="0.65" />
+  <text x="110" y="1278" class="tableCell">10</text>
+  <text x="250" y="1278" class="tableCell tenant1Text">TENANT-1</text>
+  <text x="520" y="1278" class="tableCell">10010</text>
+  <text x="690" y="1278" class="tableCell">90001</text>
+  <text x="900" y="1278" class="tableCell">10.10.10.1/24</text>
+  <text x="1310" y="1278" class="tableCell">RD auto, RT both 10:10010</text>
 
-  <rect x="95" y="1320" width="2205" height="40" rx="10" class="tenant1Fill" opacity="0.65" />
-  <text x="110" y="1346" class="tableCell">20</text>
-  <text x="250" y="1346" class="tableCell tenant1Text">TENANT-1</text>
-  <text x="520" y="1346" class="tableCell">10020</text>
-  <text x="690" y="1346" class="tableCell">90001</text>
-  <text x="900" y="1346" class="tableCell">10.10.20.1/24</text>
-  <text x="1310" y="1346" class="tableCell">RD auto, RT both 20:10020</text>
+  <rect x="95" y="1300" width="2205" height="38" rx="10" class="tenant1Fill" opacity="0.65" />
+  <text x="110" y="1324" class="tableCell">20</text>
+  <text x="250" y="1324" class="tableCell tenant1Text">TENANT-1</text>
+  <text x="520" y="1324" class="tableCell">10020</text>
+  <text x="690" y="1324" class="tableCell">90001</text>
+  <text x="900" y="1324" class="tableCell">10.10.20.1/24</text>
+  <text x="1310" y="1324" class="tableCell">RD auto, RT both 20:10020</text>
 
-  <rect x="95" y="1370" width="2205" height="40" rx="10" class="tenant2Fill" opacity="0.75" />
-  <text x="110" y="1396" class="tableCell">30</text>
-  <text x="250" y="1396" class="tableCell tenant2Text">TENANT-2</text>
-  <text x="520" y="1396" class="tableCell">10030</text>
-  <text x="690" y="1396" class="tableCell">90002</text>
-  <text x="900" y="1396" class="tableCell">10.10.30.1/24</text>
-  <text x="1310" y="1396" class="tableCell">RD auto, RT both 30:10030</text>
+  <rect x="95" y="1346" width="2205" height="38" rx="10" class="tenant2Fill" opacity="0.75" />
+  <text x="110" y="1370" class="tableCell">30</text>
+  <text x="250" y="1370" class="tableCell tenant2Text">TENANT-2</text>
+  <text x="520" y="1370" class="tableCell">10030</text>
+  <text x="690" y="1370" class="tableCell">90002</text>
+  <text x="900" y="1370" class="tableCell">10.10.30.1/24</text>
+  <text x="1310" y="1370" class="tableCell">RD auto, RT both 30:10030</text>
 
   <line x1="110" y1="1476" x2="180" y2="1476" class="link legendLine" />
   <text x="195" y="1483" class="small">Physical underlay routed link</text>
