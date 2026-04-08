@@ -93,6 +93,7 @@
     - name: Activate leaf underlay neighbors for IPv4
       eos_config:
         lines:
+          - maximum-paths 2 ecmp 2
           - neighbor UNDERLAY activate
         parents:
           - router bgp {{ asn }}
@@ -186,6 +187,7 @@
     - name: Configure EVPN VRF base
       eos_config:
         lines:
+          - rd {{ loopback }}:{{ item.tenant_id }}
           - redistribute connected
         parents:
           - router bgp {{ asn }}
@@ -268,6 +270,7 @@
     - name: Activate spine underlay neighbors for IPv4
       eos_config:
         lines:
+          - maximum-paths 4 ecmp 4
           - neighbor {{ item.leaf_ip.split('/')[0] }} activate
         parents:
           - router bgp {{ asn }}
