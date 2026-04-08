@@ -213,7 +213,7 @@
 # =========================
 - name: Configure spines (VXLAN EVPN)
   hosts: spines
-  gather_facts: no
+  gather_facts: false
 
   vars:
     loopback: "{{ loopback_base }}.{{ id }}"
