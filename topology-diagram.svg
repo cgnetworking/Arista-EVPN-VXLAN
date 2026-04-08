@@ -1,125 +1,232 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120" role="img" aria-labelledby="title desc">
-  <title id="title">Arista cEOS VXLAN EVPN topology with Ansible configuration details</title>
-  <desc id="desc">Two spines and four leaves with underlay /31 links, eBGP underlay, EVPN overlay, loopbacks, and VLAN to VNI mappings.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1600" viewBox="0 0 2400 1600" role="img" aria-labelledby="title desc">
+  <title id="title">Arista cEOS VXLAN EVPN topology from Ansible playbook</title>
+  <desc id="desc">Two spines and four leaves with routed /31 underlay links, eBGP EVPN overlay sessions over Loopback0, VTEP Loopback1 addresses on leaves, and VLAN to VNI mappings.</desc>
   <defs>
     <style>
       .bg { fill: #f8fafc; }
       .frame { fill: #ffffff; stroke: #cbd5e1; stroke-width: 3; rx: 26; }
-      .panel { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; rx: 20; }
       .spineGroup { fill: #eff6ff; stroke: #93c5fd; stroke-width: 3; rx: 26; }
       .leafGroup { fill: #f0fdf4; stroke: #86efac; stroke-width: 3; rx: 26; }
+      .panel { fill: #fff7ed; stroke: #fdba74; stroke-width: 2; rx: 18; }
+      .legend { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; rx: 18; }
       .spine { fill: #dbeafe; stroke: #2563eb; stroke-width: 4; rx: 18; }
       .leaf { fill: #dcfce7; stroke: #16a34a; stroke-width: 4; rx: 18; }
-      .title { font: 700 34px Arial, sans-serif; fill: #0f172a; }
-      .subtitle { font: 500 19px Arial, sans-serif; fill: #475569; }
-      .section { font: 700 22px Arial, sans-serif; fill: #0f172a; }
-      .nodeName { font: 700 24px Arial, sans-serif; fill: #0f172a; }
-      .nodeMeta { font: 500 17px Arial, sans-serif; fill: #334155; }
-      .small { font: 500 16px Arial, sans-serif; fill: #334155; }
-      .bold { font: 700 16px Arial, sans-serif; fill: #0f172a; }
+      .tenant1Fill { fill: #dbeafe; }
+      .tenant2Fill { fill: #fce7f3; }
+      .tenant1Stroke { stroke: #2563eb; }
+      .tenant2Stroke { stroke: #db2777; }
+      .title { font: 700 40px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 22px Arial, sans-serif; fill: #475569; }
+      .section { font: 700 26px Arial, sans-serif; fill: #0f172a; }
+      .nodeName { font: 700 28px Arial, sans-serif; fill: #0f172a; }
+      .nodeMeta { font: 500 19px Arial, sans-serif; fill: #334155; }
+      .small { font: 500 18px Arial, sans-serif; fill: #334155; }
+      .bold { font: 700 20px Arial, sans-serif; fill: #0f172a; }
       .link { stroke: #64748b; stroke-width: 4; }
       .overlay { stroke: #6d28d9; stroke-width: 6; stroke-dasharray: 18 10; stroke-linecap: round; fill: none; }
-      .linkText { font: 600 15px Arial, sans-serif; fill: #1f2937; }
+      .endpointText { font: 600 14px Arial, sans-serif; fill: #1f2937; }
+      .port { fill: #475569; stroke: #ffffff; stroke-width: 2; }
       .legendLine { stroke-width: 4; }
+      .tableHead { font: 700 19px Arial, sans-serif; fill: #7c2d12; }
+      .tableCell { font: 500 18px Arial, sans-serif; fill: #431407; }
+      .tenantTag { font: 700 16px Arial, sans-serif; }
+      .tenant1Text { fill: #1d4ed8; }
+      .tenant2Text { fill: #be185d; }
     </style>
   </defs>
 
-  <rect x="0" y="0" width="1800" height="1120" class="bg" />
-  <rect x="30" y="30" width="1740" height="1060" class="frame" />
-  <rect x="220" y="360" width="1360" height="260" class="spineGroup" />
-  <rect x="50" y="730" width="1700" height="280" class="leafGroup" />
+  <rect x="0" y="0" width="2400" height="1600" class="bg" />
+  <rect x="30" y="30" width="2340" height="1540" class="frame" />
 
-  <text x="900" y="82" text-anchor="middle" class="title">Arista cEOS VXLAN / EVPN Fabric</text>
-  <text x="900" y="116" text-anchor="middle" class="subtitle">Physical topology from topology.clab.yml, control-plane and service details from Playbook.yml, Inventory.yml, and group_vars/all.yml</text>
+  <text x="1200" y="88" text-anchor="middle" class="title">Arista cEOS VXLAN / EVPN Fabric</text>
+  <text x="1200" y="126" text-anchor="middle" class="subtitle">Rendered from playbook.yml, inventory.yml, and group_vars/all.yml</text>
+  <text x="1200" y="170" text-anchor="middle" class="bold">EVPN overlay peering via Loopback0</text>
+  <text x="1200" y="200" text-anchor="middle" class="small">Spines peer with all leaves. Leaves peer with both spines. eBGP multihop 3, update-source Loopback0.</text>
 
+  <rect x="250" y="225" width="1900" height="380" class="spineGroup" />
+  <rect x="70" y="670" width="2260" height="430" class="leafGroup" />
+  <rect x="70" y="1150" width="2260" height="250" class="panel" />
+  <rect x="70" y="1440" width="860" height="70" class="legend" />
 
-  <line x1="430" y1="520" x2="270" y2="760" class="link" />
-  <line x1="430" y1="520" x2="690" y2="760" class="link" />
-  <line x1="430" y1="520" x2="1110" y2="760" class="link" />
-  <line x1="430" y1="520" x2="1530" y2="760" class="link" />
+  <line x1="400" y1="490" x2="250" y2="790" class="link" />
+  <line x1="480" y1="490" x2="810" y2="790" class="link" />
+  <line x1="560" y1="490" x2="1370" y2="790" class="link" />
+  <line x1="640" y1="490" x2="1930" y2="790" class="link" />
 
-  <line x1="1370" y1="520" x2="270" y2="760" class="link" />
-  <line x1="1370" y1="520" x2="690" y2="760" class="link" />
-  <line x1="1370" y1="520" x2="1110" y2="760" class="link" />
-  <line x1="1370" y1="520" x2="1530" y2="760" class="link" />
+  <line x1="1740" y1="490" x2="410" y2="790" class="link" />
+  <line x1="1820" y1="490" x2="970" y2="790" class="link" />
+  <line x1="1900" y1="490" x2="1530" y2="790" class="link" />
+  <line x1="1980" y1="490" x2="2090" y2="790" class="link" />
 
-  <path d="M 430 520 C 620 390, 1180 390, 1370 520" class="overlay" />
-  <path d="M 270 870 C 680 870, 1120 870, 1530 870" class="overlay" />
+  <path d="M 520 400 C 800 245, 1600 245, 1880 400" class="overlay" />
+  <path d="M 330 900 C 900 900, 1440 900, 2010 900" class="overlay" />
 
-  <text x="900" y="412" text-anchor="middle" class="bold">EVPN overlay peering via</text>
-  <text x="900" y="436" text-anchor="middle" class="bold">Loopback0 addresses</text>
-  <text x="900" y="462" text-anchor="middle" class="small">Spines peer with all leaves; leaves peer with both spines</text>
+  <rect x="280" y="310" width="480" height="180" class="spine" />
+  <text x="520" y="360" text-anchor="middle" class="nodeName">Spine01</text>
+  <text x="520" y="394" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-spine01</text>
+  <text x="520" y="426" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.1/32</text>
+  <text x="520" y="458" text-anchor="middle" class="nodeMeta">ASN: 65010</text>
 
-  <text x="270" y="630" text-anchor="middle" class="linkText">Eth1 / 10.0.0.1/31</text>
-  <text x="270" y="650" text-anchor="middle" class="linkText">Eth1 / 10.0.0.0/31</text>
+  <rect x="1640" y="310" width="480" height="180" class="spine" />
+  <text x="1880" y="360" text-anchor="middle" class="nodeName">Spine02</text>
+  <text x="1880" y="394" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-spine02</text>
+  <text x="1880" y="426" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.2/32</text>
+  <text x="1880" y="458" text-anchor="middle" class="nodeMeta">ASN: 65010</text>
 
-  <text x="540" y="630" text-anchor="middle" class="linkText">Eth2 / 10.0.0.5/31</text>
-  <text x="540" y="650" text-anchor="middle" class="linkText">Eth1 / 10.0.0.4/31</text>
+  <rect x="90" y="790" width="480" height="220" class="leaf" />
+  <text x="330" y="845" text-anchor="middle" class="nodeName">Leaf01</text>
+  <text x="330" y="879" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf01</text>
+  <text x="330" y="911" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.11/32</text>
+  <text x="330" y="943" text-anchor="middle" class="nodeMeta">Loopback1/VTEP: 192.168.255.11/32</text>
+  <text x="330" y="975" text-anchor="middle" class="nodeMeta">ASN: 65011</text>
 
-  <text x="760" y="630" text-anchor="middle" class="linkText">Eth3 / 10.0.0.9/31</text>
-  <text x="760" y="650" text-anchor="middle" class="linkText">Eth1 / 10.0.0.8/31</text>
+  <rect x="650" y="790" width="480" height="220" class="leaf" />
+  <text x="890" y="845" text-anchor="middle" class="nodeName">Leaf02</text>
+  <text x="890" y="879" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf02</text>
+  <text x="890" y="911" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.12/32</text>
+  <text x="890" y="943" text-anchor="middle" class="nodeMeta">Loopback1/VTEP: 192.168.255.12/32</text>
+  <text x="890" y="975" text-anchor="middle" class="nodeMeta">ASN: 65012</text>
 
-  <text x="1020" y="630" text-anchor="middle" class="linkText">Eth4 / 10.0.0.13/31</text>
-  <text x="1020" y="650" text-anchor="middle" class="linkText">Eth1 / 10.0.0.12/31</text>
+  <rect x="1210" y="790" width="480" height="220" class="leaf" />
+  <text x="1450" y="845" text-anchor="middle" class="nodeName">Leaf03</text>
+  <text x="1450" y="879" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf03</text>
+  <text x="1450" y="911" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.13/32</text>
+  <text x="1450" y="943" text-anchor="middle" class="nodeMeta">Loopback1/VTEP: 192.168.255.13/32</text>
+  <text x="1450" y="975" text-anchor="middle" class="nodeMeta">ASN: 65013</text>
 
-  <text x="830" y="590" text-anchor="middle" class="linkText">Eth1 / 10.0.0.3/31</text>
-  <text x="830" y="610" text-anchor="middle" class="linkText">Eth2 / 10.0.0.2/31</text>
+  <rect x="1770" y="790" width="480" height="220" class="leaf" />
+  <text x="2010" y="845" text-anchor="middle" class="nodeName">Leaf04</text>
+  <text x="2010" y="879" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf04</text>
+  <text x="2010" y="911" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.14/32</text>
+  <text x="2010" y="943" text-anchor="middle" class="nodeMeta">Loopback1/VTEP: 192.168.255.14/32</text>
+  <text x="2010" y="975" text-anchor="middle" class="nodeMeta">ASN: 65014</text>
 
-  <text x="1060" y="590" text-anchor="middle" class="linkText">Eth2 / 10.0.0.7/31</text>
-  <text x="1060" y="610" text-anchor="middle" class="linkText">Eth2 / 10.0.0.6/31</text>
+  <circle cx="400" cy="490" r="7" class="port" />
+  <circle cx="480" cy="490" r="7" class="port" />
+  <circle cx="560" cy="490" r="7" class="port" />
+  <circle cx="640" cy="490" r="7" class="port" />
+  <circle cx="1740" cy="490" r="7" class="port" />
+  <circle cx="1820" cy="490" r="7" class="port" />
+  <circle cx="1900" cy="490" r="7" class="port" />
+  <circle cx="1980" cy="490" r="7" class="port" />
+  <circle cx="250" cy="790" r="7" class="port" />
+  <circle cx="410" cy="790" r="7" class="port" />
+  <circle cx="810" cy="790" r="7" class="port" />
+  <circle cx="970" cy="790" r="7" class="port" />
+  <circle cx="1370" cy="790" r="7" class="port" />
+  <circle cx="1530" cy="790" r="7" class="port" />
+  <circle cx="1930" cy="790" r="7" class="port" />
+  <circle cx="2090" cy="790" r="7" class="port" />
 
-  <text x="1280" y="590" text-anchor="middle" class="linkText">Eth3 / 10.0.0.11/31</text>
-  <text x="1280" y="610" text-anchor="middle" class="linkText">Eth2 / 10.0.0.10/31</text>
+  <text x="400" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="400" dy="0">Eth1</tspan>
+    <tspan x="400" dy="16">10.0.0.1/31</tspan>
+  </text>
+  <text x="480" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="480" dy="0">Eth2</tspan>
+    <tspan x="480" dy="16">10.0.0.5/31</tspan>
+  </text>
+  <text x="560" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="560" dy="0">Eth3</tspan>
+    <tspan x="560" dy="16">10.0.0.9/31</tspan>
+  </text>
+  <text x="640" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="640" dy="0">Eth4</tspan>
+    <tspan x="640" dy="16">10.0.0.13/31</tspan>
+  </text>
 
-  <text x="1530" y="630" text-anchor="middle" class="linkText">Eth4 / 10.0.0.15/31</text>
-  <text x="1530" y="650" text-anchor="middle" class="linkText">Eth2 / 10.0.0.14/31</text>
+  <text x="1740" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="1740" dy="0">Eth1</tspan>
+    <tspan x="1740" dy="16">10.0.0.3/31</tspan>
+  </text>
+  <text x="1820" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="1820" dy="0">Eth2</tspan>
+    <tspan x="1820" dy="16">10.0.0.7/31</tspan>
+  </text>
+  <text x="1900" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="1900" dy="0">Eth3</tspan>
+    <tspan x="1900" dy="16">10.0.0.11/31</tspan>
+  </text>
+  <text x="1980" y="515" text-anchor="middle" class="endpointText">
+    <tspan x="1980" dy="0">Eth4</tspan>
+    <tspan x="1980" dy="16">10.0.0.15/31</tspan>
+  </text>
 
-  <rect x="250" y="390" width="360" height="200" class="spine" />
-  <text x="430" y="435" text-anchor="middle" class="nodeName">Spine01</text>
-  <text x="430" y="465" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-spine01</text>
-  <text x="430" y="493" text-anchor="middle" class="nodeMeta">mgmt: 10.0.1.10</text>
-  <text x="430" y="521" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.1/32</text>
-  <text x="430" y="549" text-anchor="middle" class="nodeMeta">ASN: 65010</text>
+  <text x="250" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="250" dy="0">Eth1</tspan>
+    <tspan x="250" dy="16">10.0.0.0/31</tspan>
+  </text>
+  <text x="410" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="410" dy="0">Eth2</tspan>
+    <tspan x="410" dy="16">10.0.0.2/31</tspan>
+  </text>
 
-  <rect x="1190" y="390" width="360" height="200" class="spine" />
-  <text x="1370" y="435" text-anchor="middle" class="nodeName">Spine02</text>
-  <text x="1370" y="465" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-spine02</text>
-  <text x="1370" y="493" text-anchor="middle" class="nodeMeta">mgmt: 10.0.1.20</text>
-  <text x="1370" y="521" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.2/32</text>
-  <text x="1370" y="549" text-anchor="middle" class="nodeMeta">ASN: 65010</text>
+  <text x="810" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="810" dy="0">Eth1</tspan>
+    <tspan x="810" dy="16">10.0.0.4/31</tspan>
+  </text>
+  <text x="970" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="970" dy="0">Eth2</tspan>
+    <tspan x="970" dy="16">10.0.0.6/31</tspan>
+  </text>
 
-  <rect x="80" y="760" width="380" height="220" class="leaf" />
-  <text x="270" y="805" text-anchor="middle" class="nodeName">Leaf01</text>
-  <text x="270" y="835" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf01</text>
-  <text x="270" y="863" text-anchor="middle" class="nodeMeta">mgmt: 10.0.1.30</text>
-  <text x="270" y="891" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.11/32</text>
-  <text x="270" y="919" text-anchor="middle" class="nodeMeta">ASN: 65020</text>
+  <text x="1370" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="1370" dy="0">Eth1</tspan>
+    <tspan x="1370" dy="16">10.0.0.8/31</tspan>
+  </text>
+  <text x="1530" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="1530" dy="0">Eth2</tspan>
+    <tspan x="1530" dy="16">10.0.0.10/31</tspan>
+  </text>
 
-  <rect x="500" y="760" width="380" height="220" class="leaf" />
-  <text x="690" y="805" text-anchor="middle" class="nodeName">Leaf02</text>
-  <text x="690" y="835" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf02</text>
-  <text x="690" y="863" text-anchor="middle" class="nodeMeta">mgmt: 10.0.1.40</text>
-  <text x="690" y="891" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.12/32</text>
-  <text x="690" y="919" text-anchor="middle" class="nodeMeta">ASN: 65020</text>
+  <text x="1930" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="1930" dy="0">Eth1</tspan>
+    <tspan x="1930" dy="16">10.0.0.12/31</tspan>
+  </text>
+  <text x="2090" y="758" text-anchor="middle" class="endpointText">
+    <tspan x="2090" dy="0">Eth2</tspan>
+    <tspan x="2090" dy="16">10.0.0.14/31</tspan>
+  </text>
 
-  <rect x="920" y="760" width="380" height="220" class="leaf" />
-  <text x="1110" y="805" text-anchor="middle" class="nodeName">Leaf03</text>
-  <text x="1110" y="835" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf03</text>
-  <text x="1110" y="863" text-anchor="middle" class="nodeMeta">mgmt: 10.0.1.50</text>
-  <text x="1110" y="891" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.13/32</text>
-  <text x="1110" y="919" text-anchor="middle" class="nodeMeta">ASN: 65020</text>
+  <text x="110" y="1200" class="section">Tenant Services Configured By The Playbook</text>
+  <rect x="1760" y="1178" width="160" height="34" rx="17" class="tenant1Fill tenant1Stroke" stroke-width="2" />
+  <text x="1840" y="1200" text-anchor="middle" class="tenantTag tenant1Text">TENANT-1</text>
+  <rect x="1945" y="1178" width="160" height="34" rx="17" class="tenant2Fill tenant2Stroke" stroke-width="2" />
+  <text x="2025" y="1200" text-anchor="middle" class="tenantTag tenant2Text">TENANT-2</text>
 
-  <rect x="1340" y="760" width="380" height="220" class="leaf" />
-  <text x="1530" y="805" text-anchor="middle" class="nodeName">Leaf04</text>
-  <text x="1530" y="835" text-anchor="middle" class="nodeMeta">host: clab-aristaceos-leaf04</text>
-  <text x="1530" y="863" text-anchor="middle" class="nodeMeta">mgmt: 10.0.1.60</text>
-  <text x="1530" y="891" text-anchor="middle" class="nodeMeta">Loopback0: 192.168.1.14/32</text>
-  <text x="1530" y="919" text-anchor="middle" class="nodeMeta">ASN: 65020</text>
+  <text x="110" y="1250" class="tableHead">VLAN</text>
+  <text x="250" y="1250" class="tableHead">VRF</text>
+  <text x="520" y="1250" class="tableHead">VNI</text>
+  <text x="690" y="1250" class="tableHead">L3 VNI</text>
+  <text x="900" y="1250" class="tableHead">Gateway</text>
+  <text x="1310" y="1250" class="tableHead">EVPN</text>
 
-  <rect x="60" y="1005" width="660" height="60" class="panel" />
-  <line x1="95" y1="1035" x2="165" y2="1035" class="link legendLine" />
-  <text x="180" y="1041" class="small">Physical underlay routed link</text>
-  <line x1="405" y1="1035" x2="475" y2="1035" class="overlay legendLine" />
-  <text x="490" y="1041" class="small">EVPN overlay via Loopback0</text>
+  <rect x="95" y="1270" width="2205" height="40" rx="10" class="tenant1Fill" opacity="0.65" />
+  <text x="110" y="1296" class="tableCell">10</text>
+  <text x="250" y="1296" class="tableCell tenant1Text">TENANT-1</text>
+  <text x="520" y="1296" class="tableCell">10010</text>
+  <text x="690" y="1296" class="tableCell">90001</text>
+  <text x="900" y="1296" class="tableCell">10.10.10.1/24</text>
+  <text x="1310" y="1296" class="tableCell">RD auto, RT both 10:10010</text>
 
+  <rect x="95" y="1320" width="2205" height="40" rx="10" class="tenant1Fill" opacity="0.65" />
+  <text x="110" y="1346" class="tableCell">20</text>
+  <text x="250" y="1346" class="tableCell tenant1Text">TENANT-1</text>
+  <text x="520" y="1346" class="tableCell">10020</text>
+  <text x="690" y="1346" class="tableCell">90001</text>
+  <text x="900" y="1346" class="tableCell">10.10.20.1/24</text>
+  <text x="1310" y="1346" class="tableCell">RD auto, RT both 20:10020</text>
+
+  <rect x="95" y="1370" width="2205" height="40" rx="10" class="tenant2Fill" opacity="0.75" />
+  <text x="110" y="1396" class="tableCell">30</text>
+  <text x="250" y="1396" class="tableCell tenant2Text">TENANT-2</text>
+  <text x="520" y="1396" class="tableCell">10030</text>
+  <text x="690" y="1396" class="tableCell">90002</text>
+  <text x="900" y="1396" class="tableCell">10.10.30.1/24</text>
+  <text x="1310" y="1396" class="tableCell">RD auto, RT both 30:10030</text>
+
+  <line x1="110" y1="1476" x2="180" y2="1476" class="link legendLine" />
+  <text x="195" y="1483" class="small">Physical underlay routed link</text>
+  <line x1="470" y1="1476" x2="540" y2="1476" class="overlay legendLine" />
+  <text x="555" y="1483" class="small">EVPN overlay via Loopback0</text>
 </svg>
