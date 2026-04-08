@@ -21,6 +21,12 @@
           - aaa authorization exec default local
           - ip virtual-router mac-address 02:00:00:00:10:01
 
+    - name: Configure local cg user
+      eos_config:
+        lines:
+          - username cg privilege 15 nopassword
+          - username cg ssh-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIg7CYAc3w8/tJ4HoYzp1FkwuUNNc55fsUq/8BqGq7cE Arista
+
     - name: Configure Loopback
       eos_config:
         lines:
@@ -215,6 +221,12 @@
           - service routing protocols model multi-agent
           - ip routing
           - aaa authorization exec default local
+
+    - name: Configure local cg user
+      eos_config:
+        lines:
+          - username cg privilege 15 nopassword
+          - username cg ssh-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIg7CYAc3w8/tJ4HoYzp1FkwuUNNc55fsUq/8BqGq7cE Arista
 
     - name: Configure Loopback
       eos_config:
