@@ -177,7 +177,8 @@
       eos_config:
         lines:
           - rd auto
-          - route-target both evpn {{ item.id }}:{{ item.vni }}
+          - route-target import evpn {{ item.id }}:{{ item.vni }}
+          - route-target export evpn {{ item.id }}:{{ item.vni }}
           - redistribute learned
         parents:
           - router bgp {{ asn }}
