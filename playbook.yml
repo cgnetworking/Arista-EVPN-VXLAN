@@ -177,8 +177,7 @@
       eos_config:
         lines:
           - rd auto
-          - route-target import evpn {{ item.id }}:{{ item.vni }}
-          - route-target export evpn {{ item.id }}:{{ item.vni }}
+          - route-target both {{ item.id }}:{{ item.vni }}
           - redistribute connected
         parents:
           - router bgp {{ asn }}
@@ -189,6 +188,8 @@
       eos_config:
         lines:
           - rd {{ loopback }}:{{ item.tenant_id }}
+          - route-target import evpn {{ item.tenant_id }}:{{ item.l3_vni }}
+          - route-target export evpn {{ item.tenant_id }}:{{ item.l3_vni }}
           - redistribute connected
         parents:
           - router bgp {{ asn }}
@@ -198,7 +199,8 @@
     - name: Configure EVPN VRF IPv4 route-targets
       eos_config:
         lines:
-          - route-target both evpn {{ item.tenant_id }}:{{ item.l3_vni }}
+          - route-target import evpn {{ item.tenant_id }}:{{ item.l3_vni }}
+          - route-target export evpn {{ item.tenant_id }}:{{ item.l3_vni }}
         parents:
           - router bgp {{ asn }}
           - vrf {{ item.vrf }}
