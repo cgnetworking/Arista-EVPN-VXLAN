@@ -71,6 +71,7 @@
       eos_config:
         lines:
           - no bgp default ipv4-unicast
+          - maximum-paths 2 ecmp 2
           - network {{ loopback }}/32
           - network {{ vtep_loopback }}/32
         parents: router bgp {{ asn }}
@@ -93,7 +94,6 @@
     - name: Activate leaf underlay neighbors for IPv4
       eos_config:
         lines:
-          - maximum-paths 2 ecmp 2
           - neighbor UNDERLAY activate
         parents:
           - router bgp {{ asn }}
