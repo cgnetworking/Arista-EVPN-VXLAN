@@ -28,13 +28,13 @@ topology:
     Leaf04:
       kind: arista_ceos
       mgmt-ipv4: 10.0.1.60
-    Host35:
+    Host10:
       kind: linux
       exec:
         - ip link set eth1 up
         - ip addr replace 10.10.10.10/24 dev eth1
         - ip route replace default via 10.10.10.1 dev eth1
-    Host36:
+    Host20:
       kind: linux
       exec:
         - ip link set eth1 up
@@ -67,7 +67,7 @@ topology:
         - 'Leaf04:eth2'
     - endpoints:
         - 'Leaf01:eth3'
-        - 'Host35:eth1'
+        - 'Host10:eth1'
     - endpoints:
         - 'Leaf02:eth3'
-        - 'Host36:eth1'
+        - 'Host20:eth1'
