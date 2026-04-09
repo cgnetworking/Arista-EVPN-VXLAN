@@ -60,6 +60,7 @@
           - description {{ item.leaf }}-to-{{ item.spine }}
           - no switchport
           - ip address {{ item.leaf_ip }}
+          - mtu 9214
         parents: "interface {{ item.leaf_intf }}"
       loop: "{{ links }}"
       when: item.leaf == inventory_hostname
@@ -251,6 +252,7 @@
           - description {{ item.spine }}-to-{{ item.leaf }}
           - no switchport
           - ip address {{ item.spine_ip }}
+          - mtu 9214
         parents: "interface {{ item.spine_intf }}"
       loop: "{{ links }}"
       when: item.spine == inventory_hostname
