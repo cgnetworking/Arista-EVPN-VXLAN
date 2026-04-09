@@ -59,7 +59,11 @@ links:
     leaf_ip: 10.0.0.14/31
     spine_ip: 10.0.0.15/31
 
+tenants:
+  - { vrf: TENANT-1, tenant_id: 1, l3_vni: 90001 }
+  - { vrf: TENANT-2, tenant_id: 2, l3_vni: 90002 }
+
 vlans:
-  - { id: 10, vni: 10010, gateway: 10.10.10.1/24, vrf: TENANT-1, tenant_id: 1, l3_vni: 90001 }
-  - { id: 20, vni: 10020, gateway: 10.10.20.1/24, vrf: TENANT-1, tenant_id: 1, l3_vni: 90001 }
-  - { id: 30, vni: 10030, gateway: 10.10.30.1/24, vrf: TENANT-2, tenant_id: 2, l3_vni: 90002 }
+  - { id: 10, vni: 10010, gateway: 10.10.10.1/24, vrf: TENANT-1 }
+  - { id: 20, vni: 10020, gateway: 10.10.20.1/24, vrf: TENANT-1 }
+  - { id: 30, vni: 10030, gateway: 10.10.30.1/24, vrf: TENANT-2 }

@@ -43,13 +43,13 @@
       eos_config:
         lines:
           - vrf instance {{ item.vrf }}
-      loop: "{{ vlans }}"
+      loop: "{{ tenants }}"
 
     - name: Enable VRF routing
       eos_config:
         lines:
           - ip routing vrf {{ item.vrf }}
-      loop: "{{ vlans }}"
+      loop: "{{ tenants }}"
 
     # -------------------
     # Underlay Interfaces (Link Map)
@@ -175,7 +175,7 @@
         lines:
           - vxlan vrf {{ item.vrf }} vni {{ item.l3_vni }}
         parents: interface Vxlan1
-      loop: "{{ vlans }}"
+      loop: "{{ tenants }}"
 
     - name: Enable EVPN VLANs
       eos_config:
@@ -198,7 +198,7 @@
         parents:
           - router bgp {{ asn }}
           - vrf {{ item.vrf }}
-      loop: "{{ vlans }}"
+      loop: "{{ tenants }}"
 
     - name: Configure EVPN VRF IPv4 route-targets
       eos_config:
@@ -209,7 +209,7 @@
           - router bgp {{ asn }}
           - vrf {{ item.vrf }}
           - address-family ipv4
-      loop: "{{ vlans }}"
+      loop: "{{ tenants }}"
 
 
 # =========================
