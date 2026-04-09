@@ -157,6 +157,7 @@
         lines:
           - vxlan source-interface Loopback1
           - vxlan udp-port 4789
+          - vxlan learn-restrict any
         parents: interface Vxlan1
 
     - name: Map VNIs
