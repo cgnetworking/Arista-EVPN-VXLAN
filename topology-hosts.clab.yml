@@ -1,0 +1,66 @@
+name: aristaceos
+mgmt:
+  network: mgmt
+  ipv4-subnet: 10.0.1.0/24
+topology:
+  kinds:
+    arista_ceos:
+      image: 'ceos:4.34.4M'
+    linux:
+      image: alpine:latest
+  nodes:
+    Spine01:
+      kind: arista_ceos
+      mgmt-ipv4: 10.0.1.10
+    Spine02:
+      kind: arista_ceos
+      mgmt-ipv4: 10.0.1.20
+    Leaf01:
+      kind: arista_ceos
+      mgmt-ipv4: 10.0.1.30
+    Leaf02:
+      kind: arista_ceos
+      mgmt-ipv4: 10.0.1.40
+    Leaf03:
+      kind: arista_ceos
+      mgmt-ipv4: 10.0.1.50
+    Leaf04:
+      kind: arista_ceos
+      mgmt-ipv4: 10.0.1.60
+    Host01:
+      kind: linux
+      mgmt-ipv4: 10.0.1.101
+    Host02:
+      kind: linux
+      mgmt-ipv4: 10.0.1.102
+  links:
+    - endpoints:
+        - 'Spine01:eth1'
+        - 'Leaf01:eth1'
+    - endpoints:
+        - 'Spine01:eth2'
+        - 'Leaf02:eth1'
+    - endpoints:
+        - 'Spine01:eth3'
+        - 'Leaf03:eth1'
+    - endpoints:
+        - 'Spine01:eth4'
+        - 'Leaf04:eth1'
+    - endpoints:
+        - 'Spine02:eth1'
+        - 'Leaf01:eth2'
+    - endpoints:
+        - 'Spine02:eth2'
+        - 'Leaf02:eth2'
+    - endpoints:
+        - 'Spine02:eth3'
+        - 'Leaf03:eth2'
+    - endpoints:
+        - 'Spine02:eth4'
+        - 'Leaf04:eth2'
+    - endpoints:
+        - 'Leaf01:eth3'
+        - 'Host01:eth1'
+    - endpoints:
+        - 'Leaf02:eth3'
+        - 'Host02:eth1'
