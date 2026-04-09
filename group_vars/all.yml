@@ -1,6 +1,6 @@
 ---
 loopback_base: "192.168.1"
-evpn_route_target_asn: 65000
+vtep_loopback_base: "192.168.255"
 
 links:
   - leaf: clab-aristaceos-leaf01

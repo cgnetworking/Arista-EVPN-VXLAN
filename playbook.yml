@@ -8,7 +8,7 @@
 
   vars:
     loopback: "{{ loopback_base }}.{{ id }}"
-    vtep_loopback: "192.168.255.{{ id }}"
+    vtep_loopback: "{{ vtep_loopback_base }}.{{ id }}"
     spine_asn: "{{ hostvars[groups['spines'][0]].asn }}"
 
   tasks:

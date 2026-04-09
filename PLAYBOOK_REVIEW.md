@@ -11,19 +11,12 @@ This document reviews [playbook.yml](playbook.yml) as an Arista EOS VXLAN EVPN f
 
 The current playbook is structured like a straightforward non-MLAG leaf/spine EVPN fabric. It follows the normal EOS pattern where leafs own tenant VRFs, VLANs, SVIs, VXLAN VNIs, and VTEP functions, while spines provide IP underlay reachability and relay EVPN routes between leafs over loopback-based BGP sessions.
 
-## Review Findings
-
-- `playbook.yml:24-28` and `playbook.yml:234-238` create a static local `cg` account at privilege 15 with `nopassword` and a hard-coded SSH key on every switch. That is acceptable for a disposable lab, but it is a high-risk default for anything reused outside the lab because the credential material is embedded in source control and the account has unrestricted access.
-- `playbook.yml:42-212` and `playbook.yml:249-324` use `eos_config` in additive `lines` mode for dynamic objects like VRFs, VLANs, VNIs, route-targets, and link neighbors. That means removing an item from `tenants`, `vlans`, or `links` will not remove the stale device configuration; the playbook converges by addition, not full intent replacement.
-- `playbook.yml:12`, `playbook.yml:82-87`, and `playbook.yml:115-124` derive `spine_asn` from only `groups['spines'][0]`. The current inventory works because both spines share AS `65010`, but the task logic silently assumes a single common spine ASN and will misconfigure sessions if the fabric ever uses per-spine ASNs.
-
 ## Current Fabric Variables
 
 - `loopback_base`: `192.168.1`
 - `links`: routed `/31` leaf-to-spine underlay map from `group_vars/all.yml`
 - `tenants`: `TENANT-1` and `TENANT-2`
 - `vlans`: VLANs `10`, `20`, and `30`
-- `evpn_route_target_asn`: defined in `group_vars/all.yml` but not used by the playbook
 
 ## Source Key
 
@@ -81,5 +74,5 @@ The current playbook is structured like a straightforward non-MLAG leaf/spine EV
 
 - The playbook is aligned to a simple eBGP underlay plus eBGP EVPN overlay design, not an iBGP EVPN design.
 - The leafs are the only VTEPs in this topology; the spines do not own tenant VNIs or act as gateways.
-- The configuration uses manual EVPN route-targets rather than deriving them from `evpn_route_target_asn`, even though that variable exists.
+- The configuration uses explicit EVPN route-target values derived from the tenant and VLAN data in the playbook.
 - The current structure is adequate for a small lab and matches the rendered configs in `rendered-configs/`, but it is not yet a fully declarative lifecycle playbook because stale objects are not removed when inventory data shrinks.
