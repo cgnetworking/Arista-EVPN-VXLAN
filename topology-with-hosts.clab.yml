@@ -32,14 +32,14 @@ topology:
       kind: linux
       exec:
         - ip link set eth1 up
-        - ip addr add 10.10.10.10/24 dev eth1
-        - ip route add default via 10.10.10.1
+        - ip addr replace 10.10.10.10/24 dev eth1
+        - ip route replace default via 10.10.10.1 dev eth1
     Host36:
       kind: linux
       exec:
         - ip link set eth1 up
-        - ip addr add 10.10.20.20/24 dev eth1
-        - ip route add default via 10.10.20.1
+        - ip addr replace 10.10.20.20/24 dev eth1
+        - ip route replace default via 10.10.20.1 dev eth1
   links:
     - endpoints:
         - 'Spine01:eth1'
