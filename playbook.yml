@@ -182,7 +182,7 @@
         lines:
           - rd auto
           - route-target both {{ item.id }}:{{ item.vni }}
-          - redistribute connected
+          - redistribute learned
         parents:
           - router bgp {{ asn }}
           - vlan {{ item.id }}
