@@ -72,6 +72,8 @@
         lines:
           - no bgp default ipv4-unicast
           - maximum-paths 2 ecmp 2
+          - bgp log-neighbor-changes
+          - distance bgp 20 200 200
           - network {{ loopback }}/32
           - network {{ vtep_loopback }}/32
         parents: router bgp {{ asn }}
@@ -261,6 +263,8 @@
         lines:
           - no bgp default ipv4-unicast
           - maximum-paths 4 ecmp 64
+          - bgp log-neighbor-changes
+          - distance bgp 20 200 200
           - network {{ loopback }}/32
         parents: router bgp {{ asn }}
 
