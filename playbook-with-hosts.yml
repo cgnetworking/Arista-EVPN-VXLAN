@@ -1,0 +1,346 @@
+---
+# =========================
+# LEAF CONFIGURATION
+# =========================
+- name: Configure leafs (VXLAN EVPN)
+  hosts: leafs
+  gather_facts: false
+
+  vars:
+    loopback: "{{ loopback_base }}.{{ id }}"
+    vtep_loopback: "{{ vtep_loopback_base }}.{{ id }}"
+    spine_asn: "{{ hostvars[groups['spines'][0]].asn }}"
+
+  tasks:
+
+    - name: Enable routing
+      eos_config:
+        lines:
+          - service routing protocols model multi-agent
+          - ip routing
+          - aaa authorization exec default local
+          - ip virtual-router mac-address {{ ip_virtual_router_mac_address }}
+
+    - name: Configure local users
+      eos_config:
+        lines:
+          - "username {{ item.username }} privilege {{ item.privilege }}{{ ' nopassword' if item.nopassword | default(false) else '' }}"
+          - "username {{ item.username }} ssh-key {{ item.ssh_key }}"
+      loop: "{{ local_users }}"
+
+    - name: Configure Loopback
+      eos_config:
+        lines:
+          - ip address {{ loopback }}/32
+        parents: interface Loopback0
+
+    - name: Configure VTEP loopback
+      eos_config:
+        lines:
+          - ip address {{ vtep_loopback }}/32
+        parents: interface Loopback1
+
+    - name: Configure VRFs
+      eos_config:
+        lines:
+          - vrf instance {{ item.vrf }}
+      loop: "{{ tenants }}"
+
+    - name: Enable VRF routing
+      eos_config:
+        lines:
+          - ip routing vrf {{ item.vrf }}
+      loop: "{{ tenants }}"
+
+    # -------------------
+    # Underlay Interfaces (Link Map)
+    # -------------------
+    - name: Configure leaf underlay interfaces
+      eos_config:
+        lines:
+          - description {{ item.leaf }}-to-{{ item.spine }}
+          - no switchport
+          - ip address {{ item.leaf_ip }}
+          - mtu 9214
+        parents: "interface {{ item.leaf_intf }}"
+      loop: "{{ links }}"
+      when: item.leaf == inventory_hostname
+
+    # -------------------
+    # Underlay BGP
+    # -------------------
+    - name: Configure BGP underlay base for leafs
+      eos_config:
+        lines:
+          - no bgp default ipv4-unicast
+          - maximum-paths 2 ecmp 2
+          - bgp log-neighbor-changes
+          - distance bgp 20 200 200
+          - network {{ loopback }}/32
+          - network {{ vtep_loopback }}/32
+        parents: router bgp {{ asn }}
+
+    - name: Configure UNDERLAY peer group on leafs
+      eos_config:
+        lines:
+          - neighbor UNDERLAY peer group
+          - neighbor UNDERLAY remote-as {{ spine_asn }}
+        parents: router bgp {{ asn }}
+
+    - name: Configure leaf underlay BGP neighbors
+      eos_config:
+        lines:
+          - neighbor {{ item.spine_ip.split('/')[0] }} peer group UNDERLAY
+        parents: router bgp {{ asn }}
+      loop: "{{ links }}"
+      when: item.leaf == inventory_hostname
+
+    - name: Activate leaf underlay neighbors for IPv4
+      eos_config:
+        lines:
+          - neighbor UNDERLAY activate
+        parents:
+          - router bgp {{ asn }}
+          - address-family ipv4
+
+    # -------------------
+    # EVPN Overlay
+    # -------------------
+    - name: Configure EVPN base
+      eos_config:
+        lines:
+          - router-id {{ loopback }}
+          - rd auto
+        parents: router bgp {{ asn }}
+
+    - name: Configure EVPN peer group on leafs
+      eos_config:
+        lines:
+          - neighbor EVPN peer group
+          - maximum-paths 2 ecmp 2
+          - neighbor EVPN remote-as {{ spine_asn }}
+          - neighbor EVPN update-source Loopback0
+          - neighbor EVPN ebgp-multihop 3
+          - neighbor EVPN send-community extended
+        parents: router bgp {{ asn }}
+
+    - name: Configure leaf EVPN neighbors (leaf -> spines only)
+      eos_config:
+        lines:
+          - neighbor {{ loopback_base }}.{{ hostvars[item].id }} peer group EVPN
+        parents: router bgp {{ asn }}
+      loop: "{{ groups['spines'] }}"
+
+    - name: Activate leaf EVPN neighbors
+      eos_config:
+        lines:
+          - neighbor EVPN activate
+        parents:
+          - router bgp {{ asn }}
+          - address-family evpn
+
+    # -------------------
+    # VLANs / VXLAN
+    # -------------------
+    - name: Configure VLANs
+      eos_config:
+        lines:
+          - vlan {{ item.id }}
+      loop: "{{ vlans }}"
+
+    - name: Configure VLAN gateways
+      eos_config:
+        lines:
+          - vrf {{ item.vrf }}
+          - ip address virtual {{ item.gateway }}
+        parents: interface Vlan{{ item.id }}
+      loop: "{{ vlans }}"
+
+    - name: Configure host-facing access ports on leaf01 and leaf02
+      vars:
+        host_access_ports:
+          clab-aristaceos-leaf01:
+            interface: Ethernet3
+            vlan: 10
+          clab-aristaceos-leaf02:
+            interface: Ethernet3
+            vlan: 20
+      eos_config:
+        lines:
+          - description Host access
+          - switchport
+          - switchport mode access
+          - switchport access vlan {{ host_access_ports[inventory_hostname].vlan }}
+          - spanning-tree portfast
+          - no shutdown
+        parents: "interface {{ host_access_ports[inventory_hostname].interface }}"
+      when: inventory_hostname in host_access_ports
+
+    - name: Configure VXLAN interface
+      eos_config:
+        lines:
+          - vxlan source-interface Loopback1
+          - vxlan udp-port 4789
+          - vxlan learn-restrict any
+        parents: interface Vxlan1
+
+    - name: Map VNIs
+      eos_config:
+        lines:
+          - vxlan vlan {{ item.id }} vni {{ item.vni }}
+        parents: interface Vxlan1
+      loop: "{{ vlans }}"
+
+    - name: Map L3 VNIs
+      eos_config:
+        lines:
+          - vxlan vrf {{ item.vrf }} vni {{ item.l3_vni }}
+        parents: interface Vxlan1
+      loop: "{{ tenants }}"
+
+    - name: Enable EVPN VLANs
+      eos_config:
+        lines:
+          - rd auto
+          - route-target both {{ item.id }}:{{ item.vni }}
+          - redistribute learned
+        parents:
+          - router bgp {{ asn }}
+          - vlan {{ item.id }}
+      loop: "{{ vlans }}"
+
+    - name: Configure EVPN VRF base
+      eos_config:
+        lines:
+          - rd {{ loopback }}:{{ item.tenant_id }}
+          - route-target import evpn {{ item.tenant_id }}:{{ item.l3_vni }}
+          - route-target export evpn {{ item.tenant_id }}:{{ item.l3_vni }}
+          - redistribute connected
+        parents:
+          - router bgp {{ asn }}
+          - vrf {{ item.vrf }}
+      loop: "{{ tenants }}"
+
+    - name: Configure EVPN VRF IPv4 route-targets
+      eos_config:
+        lines:
+          - route-target import evpn {{ item.tenant_id }}:{{ item.l3_vni }}
+          - route-target export evpn {{ item.tenant_id }}:{{ item.l3_vni }}
+        parents:
+          - router bgp {{ asn }}
+          - vrf {{ item.vrf }}
+          - address-family ipv4
+      loop: "{{ tenants }}"
+
+
+# =========================
+# SPINE CONFIGURATION
+# =========================
+- name: Configure spines (VXLAN EVPN)
+  hosts: spines
+  gather_facts: false
+
+  vars:
+    loopback: "{{ loopback_base }}.{{ id }}"
+
+  tasks:
+
+    - name: Enable routing
+      eos_config:
+        lines:
+          - service routing protocols model multi-agent
+          - ip routing
+          - aaa authorization exec default local
+
+    - name: Configure local users
+      eos_config:
+        lines:
+          - "username {{ item.username }} privilege {{ item.privilege }}{{ ' nopassword' if item.nopassword | default(false) else '' }}"
+          - "username {{ item.username }} ssh-key {{ item.ssh_key }}"
+      loop: "{{ local_users }}"
+
+    - name: Configure Loopback
+      eos_config:
+        lines:
+          - ip address {{ loopback }}/32
+        parents: interface Loopback0
+
+    # -------------------
+    # Underlay Interfaces (Link Map)
+    # -------------------
+    - name: Configure spine underlay interfaces
+      eos_config:
+        lines:
+          - description {{ item.spine }}-to-{{ item.leaf }}
+          - no switchport
+          - ip address {{ item.spine_ip }}
+          - mtu 9214
+        parents: "interface {{ item.spine_intf }}"
+      loop: "{{ links }}"
+      when: item.spine == inventory_hostname
+
+    # -------------------
+    # Underlay BGP
+    # -------------------
+    - name: Configure BGP underlay base for spines
+      eos_config:
+        lines:
+          - no bgp default ipv4-unicast
+          - maximum-paths 4 ecmp 64
+          - bgp log-neighbor-changes
+          - distance bgp 20 200 200
+          - network {{ loopback }}/32
+        parents: router bgp {{ asn }}
+
+    - name: Configure spine underlay BGP neighbors
+      eos_config:
+        lines:
+          - neighbor {{ item.leaf_ip.split('/')[0] }} remote-as {{ hostvars[item.leaf].asn }}
+        parents: router bgp {{ asn }}
+      loop: "{{ links }}"
+      when: item.spine == inventory_hostname
+
+    - name: Activate spine underlay neighbors for IPv4
+      eos_config:
+        lines:
+          - neighbor {{ item.leaf_ip.split('/')[0] }} activate
+        parents:
+          - router bgp {{ asn }}
+          - address-family ipv4
+      loop: "{{ links }}"
+      when: item.spine == inventory_hostname
+
+    # -------------------
+    # EVPN Overlay
+    # -------------------
+    - name: Configure EVPN base
+      eos_config:
+        lines:
+          - router-id {{ loopback }}
+          - neighbor evpn next-hop-unchanged
+        parents: router bgp {{ asn }}
+
+    - name: Configure EVPN peer group on spines
+      eos_config:
+        lines:
+          - neighbor EVPN peer group
+          - neighbor EVPN update-source Loopback0
+          - neighbor EVPN ebgp-multihop 3
+          - neighbor EVPN send-community extended
+        parents: router bgp {{ asn }}
+
+    - name: Configure spine EVPN neighbors (spines -> leafs only)
+      eos_config:
+        lines:
+          - neighbor {{ loopback_base }}.{{ hostvars[item].id }} peer group EVPN
+          - neighbor {{ loopback_base }}.{{ hostvars[item].id }} remote-as {{ hostvars[item].asn }}
+        parents: router bgp {{ asn }}
+      loop: "{{ groups['leafs'] }}"
+
+    - name: Activate spine EVPN neighbors
+      eos_config:
+        lines:
+          - neighbor EVPN activate
+        parents:
+          - router bgp {{ asn }}
+          - address-family evpn
