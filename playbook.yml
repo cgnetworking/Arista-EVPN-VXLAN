@@ -21,11 +21,12 @@
           - aaa authorization exec default local
           - ip virtual-router mac-address {{ ip_virtual_router_mac_address }}
 
-    - name: Configure local cg user
+    - name: Configure local users
       eos_config:
         lines:
-          - username cg privilege 15 nopassword
-          - username cg ssh-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIg7CYAc3w8/tJ4HoYzp1FkwuUNNc55fsUq/8BqGq7cE Arista
+          - "username {{ item.username }} privilege {{ item.privilege }}{{ ' nopassword' if item.nopassword | default(false) else '' }}"
+          - "username {{ item.username }} ssh-key {{ item.ssh_key }}"
+      loop: "{{ local_users }}"
 
     - name: Configure Loopback
       eos_config:
@@ -231,11 +232,12 @@
           - ip routing
           - aaa authorization exec default local
 
-    - name: Configure local cg user
+    - name: Configure local users
       eos_config:
         lines:
-          - username cg privilege 15 nopassword
-          - username cg ssh-key ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIg7CYAc3w8/tJ4HoYzp1FkwuUNNc55fsUq/8BqGq7cE Arista
+          - "username {{ item.username }} privilege {{ item.privilege }}{{ ' nopassword' if item.nopassword | default(false) else '' }}"
+          - "username {{ item.username }} ssh-key {{ item.ssh_key }}"
+      loop: "{{ local_users }}"
 
     - name: Configure Loopback
       eos_config:

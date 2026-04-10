@@ -3,6 +3,12 @@ loopback_base: "192.168.1"
 vtep_loopback_base: "192.168.255"
 ip_virtual_router_mac_address: "02:00:00:00:10:01"
 
+local_users:
+  - username: cg
+    privilege: 15
+    nopassword: true
+    ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIg7CYAc3w8/tJ4HoYzp1FkwuUNNc55fsUq/8BqGq7cE Arista"
+
 links:
   - leaf: clab-aristaceos-leaf01
     spine: clab-aristaceos-spine01
